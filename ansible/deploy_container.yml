@@ -31,3 +31,7 @@ vars:
     docker_container:
       name: result_app
       image: "{{ result_app_image }}"
+      ports:
+       - "8081:80"
+      env:
+        REDIS_HOST: "redis.internal"
