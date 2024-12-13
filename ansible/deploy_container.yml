@@ -1,0 +1,37 @@
+---
+
+vars: 
+  vote_app_image: ""
+  result_app_image: ""     
+
+- name: Deploy Containers
+  hosts: all
+  become: true
+  tasks: []
+
+  - name: Pull Vote App Image
+    docker_image:
+      name: "{{ vote_app_image }}"
+  
+  - name: Pull Result App Image
+    docker_image:
+      name: "{{ result_app_image }}"
+      source: pull
+
+  - name: Run Vote App Container
+    docker_container:
+      name: vote_app
+      image: "{{ vote_app_image }}"
+      ports:
+       - "8080:80"
+       env:
+        REDIS_HOST: "redis.internal"
+
+  - name: Run Result App Container
+    docker_container:
+      name: result_app
+      image: "{{ result_app_image }}"
+      ports:
+       - "8081:80"
+      env:
+        REDIS_HOST: "redis.internal"
