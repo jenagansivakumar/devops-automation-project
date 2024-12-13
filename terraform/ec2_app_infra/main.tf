@@ -16,6 +16,12 @@ resource "aws_vpc" "multistack_devops" {
 }
 
 
-resource "aws_subnet" "name" {
-  
+resource "aws_subnet" "subnets" {
+  for_each = var.subnet_config
+  vpc_id = aws_vpc.multistack_devops.id
+  cidr_block = each.value.cidr_block
+  tags = {
+    Name = each.key
+  }
+  availability_zone = each.value.availability_zones[each.key]
 }

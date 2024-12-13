@@ -34,3 +34,12 @@ variable "subnet_config" {
     }
   }
 }
+
+variable "availability_zones" {
+  description = "Map of availability zones"
+  type = map(string)
+  default = {
+    "public_subnet" = "eu-west-2a"
+    "private_subnet" = "eu-west-2b"
+  }
+}
