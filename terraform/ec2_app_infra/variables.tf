@@ -43,3 +43,15 @@ variable "availability_zones" {
     "private_subnet" = "eu-west-2b"
   }
 }
+
+variable "security_grou" {
+  description = "Map of security group rules"
+  type = map(object({
+    from_port = number
+    to_port = number
+    protocol = string
+    cidr_blocks = list(string)
+  }))
+  default = {
+  }
+}

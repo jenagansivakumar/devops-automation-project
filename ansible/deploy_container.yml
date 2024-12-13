@@ -1,0 +1,6 @@
+---
+
+- name: Deploy Containers
+  hosts: all
+  become: true
+  tasks: []

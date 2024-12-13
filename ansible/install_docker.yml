@@ -1,0 +1,19 @@
+---
+- name: Install and Configure Docker
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Start and Enable Docker Service
+      service: 
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add User to Docker Group
+      command: usermod -aG docker "{{ ansible_user }}"
