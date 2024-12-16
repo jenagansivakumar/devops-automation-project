@@ -1,155 +1,58 @@
-<!-- © 2024 | Ironhack -->
+# Movie Recommender
+ 
+## Overview
 
----
+The Movie Recommender app was created to address challenges such as web scraping and enhanced response times. Using The Movie Database (TMDb) API, this app fetches popular movie data, implements rate limiting, and utilises caching with Redis to speed up responses.
 
-# Multi-Stack Voting Application
+The app is containerised using Docker, including a Redis container, making it portable and easy to deploy.
+## Features
 
-**Welcome to your DevOps practice project!** This repository hosts a multi-stack voting application composed of several services, each implemented in a different language and technology stack. The goal is to help you gain experience with containerization, orchestration, and running a distributed set of services—both individually and as part of a unified system.
+- **Rate Limiting**: Uses `golang.org/x/time/rate` and Redis to prevent excessive requests to the TMDb API (1 request per 5 seconds).
+- **Caching**: Data from TMDb is cached in Redis to avoid repeated API calls and improve response times.
+- **Containerisation**: The entire system, including the Movie Recommender app and Redis, is containerised using Docker.
 
-This application, while simple, uses multiple components commonly found in modern distributed architectures, giving you hands-on practice in connecting services, handling containers, and working with basic infrastructure automation.
+## Technologies Used
 
-## Application Overview
+- **Go**: The backend language for the application.
+- **Redis**: For caching API responses and rate limiting.
+- **Docker**: To containerise both the application and Redis for easy deployment.
+- **Rate Limiting**: Implemented using `golang.org/x/time/rate` along with Redis for storing user request limits.
 
-The voting application includes:
+## How It Works
 
-- **Vote (Python)**: A Python Flask-based web application where users can vote between two options.
-- **Redis (in-memory queue)**: Collects incoming votes and temporarily stores them.
-- **Worker (.NET)**: A .NET 7.0-based service that consumes votes from Redis and persists them into a database.
-- **Postgres (Database)**: Stores votes for long-term persistence.
-- **Result (Node.js)**: A Node.js/Express web application that displays the vote counts in real time.
+1. The app fetches popular movie data from TMDb.
+2. It applies a rate limiter to avoid overwhelming the API (1 request every 5 seconds).
+3. The data is cached in Redis for quicker access on subsequent requests.
+4. Docker is used to containerise the entire system, making it easy to deploy and run anywhere.
 
-### Why This Setup?
+## Installation & Setup
 
-The goal is to introduce you to a variety of languages, tools, and frameworks in one place. This is **not** a perfect production design. Instead, it’s intentionally diverse to help you:
-
-- Work with multiple runtimes and languages (Python, Node.js, .NET).
-- Interact with services like Redis and Postgres.
-- Containerize applications using Docker.
-- Use Docker Compose to orchestrate and manage multiple services together.
-
-By dealing with this “messy” environment, you’ll build real-world problem-solving skills. After this project, you should feel more confident tackling more complex deployments and troubleshooting issues in containerized, multi-service setups.
-
----
-
-## How to Run Each Component
-
-### Running the Vote Service (Python) Locally (No Docker)
-
-1. Ensure you have Python 3.10+ installed.
-2. Navigate to the `vote` directory:
-   ```bash
-   cd vote
-   pip install -r requirements.txt
-   python app.py
-   ```
-   Access the vote interface at [http://localhost:5000](http://localhost:5000).
-
-### Running Redis Locally (No Docker)
-
-1. Install Redis on your system ([https://redis.io/docs/getting-started/](https://redis.io/docs/getting-started/)).
-2. Start Redis:
-   ```bash
-   redis-server
-   ```
-   Redis will be available at `localhost:6379`.
-
-### Running the Worker (C#/.NET) Locally (No Docker)
-
-1. Ensure .NET 7.0 SDK is installed.
-2. Navigate to `worker`:
-   ```bash
-   cd worker
-   dotnet restore
-   dotnet run
-   ```
-   The worker will attempt to connect to Redis and Postgres when available.
-
-### Running Postgres Locally (No Docker)
-
-1. Install Postgres from [https://www.postgresql.org/download/](https://www.postgresql.org/download/).
-2. Start Postgres, note the username and password (default `postgres`/`postgres`):
-   ```bash
-   # On many systems, Postgres runs as a service once installed.
-   ```
-   Postgres will be available at `localhost:5432`.
-
-### Running the Result Service (Node.js) Locally (No Docker)
-
-1. Ensure Node.js 18+ is installed.
-2. Navigate to `result`:
-   ```bash
-   cd result
-   npm install
-   node server.js
-   ```
-   Access the results interface at [http://localhost:4000](http://localhost:4000).
-
-**Note:** To get the entire system working end-to-end (i.e., votes flowing through Redis, processed by the worker, stored in Postgres, and displayed by the result app), you’ll need to ensure each component is running and that connection strings or environment variables point to the correct services.
-
----
-
-## Running the Entire Stack in Docker
-
-### Building and Running Individual Services
-
-You can build each service with Docker and run them individually:
-
-- **Vote (Python)**:
-  ```bash
-  docker build -t myorg/vote:latest ./vote
-  docker run --name vote -p 8080:80 myorg/vote:latest
-  ```
-  Visit [http://localhost:8080](http://localhost:8080).
-
-- **Redis** (official image, no build needed):
-  ```bash
-  docker run --name redis -p 6379:6379 redis:alpine
-  ```
-
-- **Worker (.NET)**:
-  ```bash
-  docker build -t myorg/worker:latest ./worker
-  docker run --name worker myorg/worker:latest
-  ```
-  
-- **Postgres**:
-  ```bash
-  docker run --name db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:15-alpine
-  ```
-
-- **Result (Node.js)**:
-  ```bash
-  docker build -t myorg/result:latest ./result
-  docker run --name result -p 8081:80 myorg/result:latest
-  ```
-  Visit [http://localhost:8081](http://localhost:8081).
-
-### Using Docker Compose
-
-The easiest way to run the entire stack is via Docker Compose. From the project root directory:
+### 1. Clone the repository:
 
 ```bash
-docker compose up
+git clone https://github.com/yourusername/movie-recommender.git
+cd movie-recommender
 ```
 
-This will:
-
-- Build and run the vote, worker, and result services.
-- Run Redis and Postgres from their official images.
-- Set up networks, volumes, and environment variables so all services can communicate.
-
-Visit [http://localhost:8080](http://localhost:8080) to vote and [http://localhost:8081](http://localhost:8081) to see results.
-
----
-
-## Notes on Platforms (arm64 vs amd64)
-
-If you’re on an arm64 machine (e.g., Apple Silicon M1/M2) and encounter issues with images or dependencies that assume amd64, you can use Docker `buildx`:
-
-```bash
-docker buildx build --platform linux/amd64 -t myorg/worker:latest ./worker
+### 2. Create the .env file:
+```
+API_KEY=your_api_key_here
 ```
 
-This ensures the image is built for the desired platform.
+### 3. Run with Docker Compose:
+Make sure Docker and Docker Compose are installed. Then, run:
+```
+docker compose up --build
+```
+This comment will build the Docker images and start both the Movie Recommender app and Redis containers.
 
----
+### 4. Access the app:
+Once the container are up and running, visit http://localhost:8080 in your browser. Refresh the page a few times to see the logs and check the caching behaviour.
+
+## How to Test
+1. Once the app is running, check the logs:
+- "cache miss"
+- "fetching data from API"
+- "setting cached data"
+- "using cache"
+2. Logs wwill show when the data is fetched from the API and when it's served from the cache.
