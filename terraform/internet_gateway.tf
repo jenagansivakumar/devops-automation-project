@@ -1,7 +1,7 @@
 resource "aws_internet_gateway" "igw" {
-    vpc_id = aws_vpc.voting-app-vpc.id
+  vpc_id = aws_vpc.voting_app_vpc.id
 
-    tags = {
-      Name = "gui-igw"
-    }
+  tags = {
+    Name = var.igw
+  }
 }

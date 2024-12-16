@@ -1,24 +1,24 @@
 resource "aws_subnet" "public_subnet" {
-  vpc_id = aws_vpc.voting-app-vpc.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id                  = aws_vpc.voting_app_vpc.id
+  cidr_block              = var.subnets.public.cidr_block
+  availability_zone       = var.subnets.public.availability_zone
   map_public_ip_on_launch = true
-  availability_zone = "eu-north-1a"
 }
 
 resource "aws_subnet" "private_subnet_a" {
-  vpc_id = aws_vpc.voting-app-vpc.id
-  cidr_block = "10.0.2.0/24"
-  availability_zone = "eu-north-1a"
+  vpc_id            = aws_vpc.voting_app_vpc.id
+  cidr_block        = var.subnets.private_a.cidr_block
+  availability_zone = var.subnets.private_a.availability_zone
 }
 
 resource "aws_subnet" "private_subnet_b" {
-  vpc_id = aws_vpc.voting-app-vpc.id
-  cidr_block = "10.0.3.0/24"
-  availability_zone = "eu-north-1b"
+  vpc_id            = aws_vpc.voting_app_vpc.id
+  cidr_block        = var.subnets.private_b.cidr_block
+  availability_zone = var.subnets.private_b.availability_zone
 }
 
 resource "aws_subnet" "private_subnet_c" {
-  vpc_id = aws_vpc.voting-app-vpc.id
-  cidr_block = "10.0.4.0/24"
-  availability_zone = "eu-north-1c"
+  vpc_id            = aws_vpc.voting_app_vpc.id
+  cidr_block        = var.subnets.private_c.cidr_block
+  availability_zone = var.subnets.private_c.availability_zone
 }

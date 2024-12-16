@@ -1,15 +1,15 @@
 resource "aws_lb_target_group" "vote_result_tg" {
- name = "vote-tg"
- port = "80"
- protocol = "HTTP"
+  name     = var.tg.name
+  port     = var.tg.port
+  protocol = var.tg.protocol
 
- health_check {
- path = "/health-check-path"
- interval = 30
- timeout = 5
- healthy_threshold = 5
- unhealthy_threshold = 3
-}
+  health_check {
+    path                = var.tg.path
+    interval            = var.tg.interval
+    timeout             = var.tg.timeout
+    healthy_threshold   = var.tg.healthy_threshold
+    unhealthy_threshold = var.tg.unhealthy_threshold
+  }
 
- vpc_id= aws_vpc.voting_app_vpc.id 
+  vpc_id = aws_vpc.voting_app_vpc.id
 }
