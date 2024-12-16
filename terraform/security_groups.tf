@@ -56,3 +56,5 @@ resource "aws_security_group" "postgres_sg" {
     security_groups = [aws_security_group.redis_worker_sg.id] # Allow traffic from Redis Worker service
   }
 }
+
+ 
