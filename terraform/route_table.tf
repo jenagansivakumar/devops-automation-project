@@ -16,8 +16,17 @@ resource "aws_route_table_association" "public_subnet" {
   route_table_id = aws_route_table.public_rt.id
 }
 
-resource "aws_route" "private_route_out" {
+resource "aws_route_table" "private_route_table" {
+  vpc_id = aws_vpc.voting_app_vpc.id
+  
+  tags = {
+    Name = "private-route-table"
+    }
+}
+
+resource "aws_route" "private_route_table" {
   route_table_id         = aws_route_table.private_route_table.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat_gateway
+  nat_gateway_id         = aws_nat_gateway.nat_gateway.id
 }
+
