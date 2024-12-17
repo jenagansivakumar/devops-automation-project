@@ -14,7 +14,7 @@ resource "aws_instance" "master_instance" {
   instance_type = var.instance_type
 
   subnet_id              = aws_subnet.public_subnet.id
-  vpc_security_group_ids = [aws_security_group.alb_sg.id]
+  vpc_security_group_ids = [aws_security_group.public_sg.id]
 
   tags = {
     Name = "master_instance"

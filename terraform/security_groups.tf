@@ -18,6 +18,33 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
+resource "aws_security_group" "public_sg" {
+  name        = var.sg.public.name
+  description = var.sg.public.description
+  vpc_id      = aws_vpc.voting_app_vpc.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_security_group" "vote_sg" {
   name        = var.sg.vote.name
   description = var.sg.vote.description
